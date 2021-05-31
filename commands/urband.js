@@ -20,7 +20,6 @@ module.exports = {
         ud.define(word, function (err, def) {
             if (err) {
                 message.channel.send('An error occurred while looking up this word.')
-                console.error(err)
             } else {
                 if (def) {
                     const dictionaryEmbed = new d.MessageEmbed()
@@ -34,8 +33,6 @@ module.exports = {
                         .addField('Thumbs Down', def[0].thumbs_down, true)
 
                     message.channel.send(dictionaryEmbed)
-
-                    console.log(def)
                 } else {
                     message.channel.send('No definition available.')
                 }
