@@ -23,7 +23,7 @@ client.on('message', message => {
             message.channel.send(response)
         })
     }
-    
+
     if (!message.content.startsWith(prefix) || message.author.bot) { return; }
 
     const arguments = message.content.slice(prefix.length).split(/ +/);
