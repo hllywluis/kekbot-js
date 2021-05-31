@@ -12,9 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "cleverbot-free": "^1.1.6",
-    "discord.js": "^12.5.3"
-  },
-  "devDependencies": {
+    "discord.js": "^12.5.3",
     "yandex-translate": "^2.1.3"
   }
 }
