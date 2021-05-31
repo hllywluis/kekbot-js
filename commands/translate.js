@@ -22,7 +22,6 @@ module.exports = {
         let languageNames = new Intl.DisplayNames(['en'], {type: 'language'})
 
         translate(trString, { to: trLang }).then(function (res) {
-            console.log(res)
             const translationEmbed = new d.MessageEmbed()
                 .setColor('#1a73e8')
                 .setAuthor('Google Translate', 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Google_Translate_logo.svg/1024px-Google_Translate_logo.svg.png', encodeURI('https://translate.google.com/?sl=' + res.from.language.iso + '&tl=' + trLang + '&text=' + trString + '&op=translate'))
