@@ -14,6 +14,7 @@
     "@iamtraction/google-translate": "^1.1.2",
     "cleverbot-free": "^1.1.6",
     "discord.js": "^12.5.3",
+    "urban-dictionary": "^3.0.1",
     "yandex-translate": "^2.1.3"
   }
 }

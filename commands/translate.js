@@ -4,7 +4,7 @@ module.exports = {
     name: 'translate',
     description: 'Translate words/sentences into other languages.',
     aliases: ['tr'],
-    usage: '[language] [text]',
+    usage: '~tr [language] [text]',
     cooldown: 2,
     arguments: true,
     execute(message, arguments) {

@@ -2,7 +2,7 @@ module.exports = {
     name: 'nickname',
     description: 'Change this bot\'s or any user\'s nickname.',
     aliases: ['nn'],
-    usage: '[@user] [nickname]',
+    usage: '~nn [@user] [nickname]',
     cooldown: 2,
     arguments: true,
     execute(message, arguments) {
