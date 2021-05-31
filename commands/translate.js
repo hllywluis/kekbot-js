@@ -1,4 +1,4 @@
-const translate = require('yandex-translate')(require('../config.json')["yandex-key"]);
+const translate = require('@iamtraction/google-translate')
 
 module.exports = {
     name: 'translate',
@@ -17,10 +17,8 @@ module.exports = {
             }
         }
         let trLang = arguments[0];
-        translate.translate(trString, { to: trLang }, function (err, res) {
-            if (err != null) {
-                return console.error(err);
-            }
+        translate(trString, { to: trLang }).then(function (res) {
+            console.log(res)
             message.channel.send(`The translation for \"${trString}\" in \`${trLang}\` is \"${res.text}\"`);
         })
     },
