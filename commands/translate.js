@@ -11,15 +11,15 @@ module.exports = {
         let trString = "";
         for (let i = 1; i < arguments.length; i++) {
             if (i === arguments.length - 1) {
-                trString += arguments[i];
+                trString += arguments[i]
             } else {
-                trString += arguments[i] + " ";
+                trString += arguments[i] + " "
             }
         }
-        let trLang = arguments[0];
+        let trLang = arguments[0]
         translate(trString, { to: trLang }).then(function (res) {
             console.log(res)
-            message.channel.send(`The translation for \"${trString}\" in \`${trLang}\` is \"${res.text}\"`);
+            message.channel.send(`The translation for \"${trString}\" in \`${trLang}\` is \"${res.text}\"`)
         })
     },
 };

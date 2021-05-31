@@ -17,7 +17,7 @@ client.on('ready', () => {
 });
 
 client.on('message', message => {
-    if (!message.mentions.has(message.mentions.EVERYONE_PATTERN) && message.mentions.has(client.user.id)) {
+    if (!message.content.startsWith(prefix) && !message.mentions.has(message.mentions.EVERYONE_PATTERN) && message.mentions.has(client.user.id)) {
         let mention = /<@(.*?)>/
         cleverbot(message.content.replace(mention, '')).then(response => {
             message.channel.send(response)

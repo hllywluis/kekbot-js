@@ -6,14 +6,14 @@ module.exports = {
     cooldown: 8,
     execute(message) {
         if (!message.mentions.users.size) {
-            return message.reply('please tag a user.');
+            return message.reply('please tag a user.')
         }
 
-        let taggedUser = message.mentions.users.first();
+        let taggedUser = message.mentions.users.first()
 
         if (taggedUser.id === '625855286783115294') {
-            return message.channel.send('You wanted to kick me?!?!');
+            return message.channel.send('You wanted to kick me?!?!')
         }
-        message.channel.send(`You wanted to kick: ${taggedUser.username}`);
+        message.channel.send(`You wanted to kick: ${taggedUser.username}`)
     },
 };
