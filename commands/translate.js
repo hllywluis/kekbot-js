@@ -9,6 +9,8 @@ module.exports = {
     cooldown: 2,
     arguments: true,
     execute(message, arguments) {
+        message.channel.startTyping()
+
         let trString = "";
         for (let i = 1; i < arguments.length; i++) {
             if (i === arguments.length - 1) {
@@ -29,7 +31,7 @@ module.exports = {
                 .addField(languageNames.of(trLang) + ':', res.text)
 
             message.channel.send(translationEmbed)
-            // message.channel.send(`The translation for \"${trString}\" in \`${trLang}\` is \"${res.text}\"`)
+            message.channel.stopTyping()
         })
     },
 };

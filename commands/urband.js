@@ -8,6 +8,8 @@ module.exports = {
     usage: '[word]',
     cooldown: 1,
     execute(message) {
+        message.channel.startTyping()
+
         let word = message.content.substr(3).trim()
         let words = word.split(' ')
 
@@ -20,6 +22,7 @@ module.exports = {
         ud.define(word, function (err, def) {
             if (err) {
                 message.channel.send('An error occurred while looking up this word.')
+                message.channel.stopTyping()
             } else {
                 if (def) {
                     const dictionaryEmbed = new d.MessageEmbed()
@@ -33,8 +36,10 @@ module.exports = {
                         .addField('Thumbs Down', def[0].thumbs_down, true)
 
                     message.channel.send(dictionaryEmbed)
+                    message.channel.stopTyping()
                 } else {
                     message.channel.send('No definition available.')
+                    message.channel.stopTyping()
                 }
             }
         })

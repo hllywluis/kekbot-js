@@ -7,6 +7,8 @@ module.exports = {
     usage: '~help (command name)',
     cooldown: 5,
     execute(message, arguments) {
+        message.channel.startTyping()
+
         const data = [];
         const { commands } = message.client;
 
@@ -19,9 +21,11 @@ module.exports = {
                 .then(() => {
                     if (message.channel.type === 'dm') { return; }
                     message.reply('I\'ve sent you a DM with all of my commands!');
+                    message.channel.stopTyping()
                 }).catch(error => {
                     console.error(`Could not send help DM to ${message.author.tag},\n`, error);
                     message.reply('It seems like I can\'t DM you! Do you have your DMs disabled?');
+                    message.channel.stopTyping()
                 })
         }
 
@@ -29,6 +33,7 @@ module.exports = {
         const command = commands.get(name) || commands.find(c => c.aliases && c.aliases.includes(name));
 
         if (!command) {
+            message.channel.stopTyping()
             return message.reply('that\'s not a valid command!');
         }
 
@@ -41,5 +46,6 @@ module.exports = {
         data.push(`Cooldown: ${command.cooldown || 3} second(s).`);
 
         message.channel.send(data, { split: true });
+        message.channel.stopTyping()
     }
 };
