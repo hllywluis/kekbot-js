@@ -29,7 +29,7 @@ client.on('message', message => {
                 .setColor('#cde9fa')
                 .setAuthor('Cleverbot', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkVvqrpdE1ZWcLuucR507PvHXFQloeWO5mMR_2ZDGtj-j_aw8a2A6b4swH0c62E5lUSBA&usqp=CAU', 'https://cleverbot.com')
 
-            cleverbotEmbed.addField(message.author.username + ':', chat[0])
+            cleverbotEmbed.addField(message.guild.member(message.author).displayName ? message.guild.member(message.author).displayName + ':' : message.author.username + ':', chat[0])
             cleverbotEmbed.addField('kekbot:', response)
 
             chat.push(response)
