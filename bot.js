@@ -76,6 +76,7 @@ client.on('message', message => {
 
     try {
         command.execute(message, arguments);
+        message.channel.stopTyping()
     } catch (error) {
         console.error(error);
         message.channel.stopTyping()
