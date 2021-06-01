@@ -8,7 +8,7 @@ module.exports = {
     cooldown: 5,
     guildOnly: false,
     execute(message, arguments) {
-        message.channel.startTyping()
+        message.channel.startTyping(1)
 
         let commandData = []
         const { commands } = message.client
