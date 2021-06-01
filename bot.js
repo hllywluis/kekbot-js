@@ -21,6 +21,8 @@ client.on('message', message => {
     if ((!message.content.startsWith(prefix) && message.channel.type === 'dm' && message.author.id !== client.user.id) || (!message.content.startsWith(prefix) && !message.mentions.has(message.mentions.EVERYONE_PATTERN) && message.mentions.has(client.user.id))) {
         message.channel.startTyping()
         let mention = /<@(.*?)>/
+
+        if (chat.length > 5000) { chat = [] }
         chat.push(message.content.replace(mention, '').trim())
         cleverbot(message.content.replace(mention, '').trim(), chat).then(response => {
             chat.push(response)
