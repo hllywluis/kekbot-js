@@ -1,4 +1,5 @@
 const d = require('discord.js')
+const kekbot = require('../bot.js')
 
 module.exports = {
     name: 'Help',
@@ -21,7 +22,7 @@ module.exports = {
             const helpEmbed = new d.MessageEmbed()
                 .setColor('#5dc67b')
                 .setTitle('Help is here.')
-                .setAuthor('kekbot', 'https://cdn.discordapp.com/app-icons/625855286783115294/fe19dc5ce35a3aad25066b76b9318211.png?size=512')
+                .setAuthor(kekbot.client.user.username, 'https://cdn.discordapp.com/app-icons/625855286783115294/fe19dc5ce35a3aad25066b76b9318211.png?size=512')
                 .addField('Commands:', commandData.join('\n'))
                 .addField('PSST:', 'You can send `~help (command)` for more information on a specific command.', true)
                 .addField('Total Number:', commandData.length, true)

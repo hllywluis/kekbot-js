@@ -7,6 +7,10 @@ client.commands = new Discord.Collection();
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 const cooldowns = new Discord.Collection();
 
+module.exports = {
+    client: client
+}
+
 for (const file of commandFiles) {
     const command = require(`./commands/${file}`);
     client.commands.set(command.name, command);
@@ -30,7 +34,7 @@ client.on('message', message => {
                 .setAuthor('Cleverbot', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkVvqrpdE1ZWcLuucR507PvHXFQloeWO5mMR_2ZDGtj-j_aw8a2A6b4swH0c62E5lUSBA&usqp=CAU', 'https://cleverbot.com')
 
             cleverbotEmbed.addField(message.guild.member(message.author).displayName ? message.guild.member(message.author).displayName + ':' : message.author.username + ':', chat[0])
-            cleverbotEmbed.addField('kekbot:', response)
+            cleverbotEmbed.addField(message.guild.member(client.user).displayName ? message.guild.member(client.user).displayName + ':' : client.user.username + ':', response)
 
             chat.push(response)
             // message.channel.send(response)
