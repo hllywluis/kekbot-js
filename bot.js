@@ -64,7 +64,7 @@ client.on('message', message => {
         let reply = `You didn't provide any arguments, ${message.author}!`;
 
         if (command.usage) {
-            reply += `\nThe proper usage would be: \`${prefix}${commandName} ${command.usage}.\``;
+            reply += `\nThe proper usage would be: \`${command.usage}\`.`;
         }
 
         message.channel.stopTyping()
