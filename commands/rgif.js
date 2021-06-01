@@ -22,8 +22,6 @@ module.exports = {
                 .setAuthor('Tenor', 'https://tenor.com/assets/img/tenor-app-icon.png', results[0].itemurl)
                 .setTitle(searchTerm)
                 .setImage(results[0].media[0].gif.url)
-                .addField('Shares:', results[0].shares, true)
-                .addField('ID:', results[0].id, true)
 
             message.channel.send(tenorEmbed)
         })
