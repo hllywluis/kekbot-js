@@ -18,6 +18,7 @@ module.exports = {
         let searchTerm = message.content.substr(3).trim()
         Tenor.Search.Random(searchTerm, '1').then(results => {
             let tenorEmbed = new d.MessageEmbed()
+                .setColor('#307ad6')
                 .setAuthor('Tenor', 'https://tenor.com/assets/img/tenor-app-icon.png', results[0].itemurl)
                 .setTitle(searchTerm)
                 .setImage(results[0].media[0].gif.url)
