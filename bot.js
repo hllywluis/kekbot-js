@@ -37,6 +37,7 @@ client.on('message', message => {
     if (!command) { return; }
 
     if (message.channel.type === 'dm' && command.guildOnly && message.channel.type !== 'text') {
+        message.channel.stopTyping()
         return message.reply('I can\'t execute that command inside DMs!');
     }
 
@@ -48,6 +49,7 @@ client.on('message', message => {
             reply += `\nThe proper usage would be: \`${prefix}${commandName} ${command.usage}.\``;
         }
 
+        message.channel.stopTyping()
         return message.channel.send(reply);
     }
 
@@ -64,6 +66,7 @@ client.on('message', message => {
 
         if (now < expirationTime) {
             const timeLeft = (expirationTime - now) / 1000;
+            message.channel.stopTyping()
             return message.reply(`please wait ${timeLeft.toFixed(1)} more second(s) before reusing the \`${command.name}\` command.`)
         }
     }
@@ -75,6 +78,7 @@ client.on('message', message => {
         command.execute(message, arguments);
     } catch (error) {
         console.error(error);
+        message.channel.stopTyping()
         message.reply(`there was an error trying to execute ${commandName}.`);
     }
 });
