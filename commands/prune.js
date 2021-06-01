@@ -1,8 +1,11 @@
 module.exports = {
-    name: 'prune',
+    name: 'Prune',
     description: 'Prunes up to 100 messages, or displays an error if I can\'t delete any.',
+    usage: '~pr [number]',
+    aliases: ['pr'],
     cooldown: 20,
     arguments: true,
+    guildOnly: true,
     execute(message, arguments) {
         message.channel.startTyping()
 

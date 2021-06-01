@@ -1,10 +1,11 @@
 module.exports = {
-    name: 'nickname',
+    name: 'Nickname',
     description: 'Change this bot\'s or any user\'s nickname.',
     aliases: ['nn'],
     usage: '~nn [@user] [nickname]',
     cooldown: 2,
     arguments: true,
+    guildOnly: true,
     execute(message, arguments) {
         message.channel.startTyping()
 

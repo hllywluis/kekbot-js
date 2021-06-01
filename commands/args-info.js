@@ -1,8 +1,11 @@
 module.exports = {
-    name: 'args-info',
+    name: 'Argument Info',
     description: 'Parses information about provided arguments.',
-    arguments: true,
+    usage: '~arg (arguments...)',
+    aliases: ['arg'],
     cooldown: 2,
+    arguments: true,
+    guildOnly: false,
     execute(message, arguments) {
         message.channel.startTyping()
 

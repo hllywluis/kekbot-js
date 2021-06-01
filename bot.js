@@ -34,11 +34,11 @@ client.on('message', message => {
     const command = client.commands.get(commandName)
         || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
-    if (command.guildOnly && message.channel.type !== 'text') {
+    if (!command) { return; }
+
+    if (message.channel.type === 'dm' && command.guildOnly && message.channel.type !== 'text') {
         return message.reply('I can\'t execute that command inside DMs!');
     }
-
-    if (!command) { return; }
 
     // Checking and verifying arguments.
     if (command.arguments && !arguments.length) {

@@ -5,8 +5,9 @@ module.exports = {
     name: 'Urban Dictionary',
     description: 'Send the definition of a word according to Urban Dictionary.',
     aliases: ['ud'],
-    usage: '[word]',
+    usage: '~ud [word]',
     cooldown: 1,
+    guildOnly: false,
     execute(message) {
         message.channel.startTyping()
 

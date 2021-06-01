@@ -2,12 +2,13 @@ const d = require('discord.js')
 const translate = require('@iamtraction/google-translate')
 
 module.exports = {
-    name: 'translate',
-    description: 'Translate words/sentences into other languages.',
+    name: 'Translate',
+    description: 'Translate words/sentences into other languages using Google Translate.',
     aliases: ['tr'],
     usage: '~tr [language] [text]',
     cooldown: 2,
     arguments: true,
+    guildOnly: false,
     execute(message, arguments) {
         message.channel.startTyping()
 
