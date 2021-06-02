@@ -20,7 +20,7 @@ module.exports = {
                 .setAuthor('Wikipedia', 'https://upload.wikimedia.org/wikipedia/en/thumb/8/80/Wikipedia-logo-v2.svg/1920px-Wikipedia-logo-v2.svg.png', 'https://www.wikipedia.org')
                 .setURL(result.fullurl)
                 .addField('Summary:', summary.extract)
-                .setImage(summary.originalimage ? summary.originalimage.source : '')
+                .setThumbnail(summary.originalimage ? summary.originalimage.source : '')
 
             await message.channel.send(wikipediaEmbed)
         } catch(error) {
