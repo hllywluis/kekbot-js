@@ -1,8 +1,8 @@
 const d = require('discord.js')
-const config = require('../config.json')
+const {tenorKey} = require('../config.json')
 
 const Tenor = require('tenorjs').client({
-    'Key': config["tenor-key"],
+    'Key': tenorKey,
     'Filter': 'off',
     'Locale': 'en_US',
     'MediaFilter': 'minimal',
