@@ -16,6 +16,7 @@
     "discord.js": "^12.5.3",
     "tenorjs": "^1.0.8",
     "urban-dictionary": "^3.0.1",
+    "wikipedia": "^1.1.1",
     "yandex-translate": "^2.1.3"
   }
 }
