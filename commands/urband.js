@@ -12,13 +12,6 @@ module.exports = {
         message.channel.startTyping()
 
         let word = message.content.substr(3).trim()
-        let words = word.split(' ')
-
-        for (let i = 0; i < words.length; i++) {
-            words[i] = words[i][0].toUpperCase() + words[i].substr(1)
-        }
-
-        word = words.join(' ')
 
         ud.define(word, function (err, def) {
             if (err) {
@@ -28,7 +21,7 @@ module.exports = {
                 if (def) {
                     const dictionaryEmbed = new d.MessageEmbed()
                         .setColor('#e963a2')
-                        .setTitle(word)
+                        .setTitle(def[0].word)
                         .setURL(encodeURI('https://www.urbandictionary.com/define.php?term=' + word))
                         .setAuthor('Urban Dictionary', 'https://apprecs.org/ios/images/app-icons/256/74/584986228.jpg', 'https://www.urbandictionary.com')
                         .addField('Definition by ' + def[0].author.replace(/\[/g, '').replace(/]/g, '') + ':', def[0].definition.length >= 1024 ? def[0].definition.replace(/\[/g, '').replace(/]/g, '').substr(0, 1021) + '...' : def[0].definition.replace(/\[/g, '').replace(/]/g, ''))
