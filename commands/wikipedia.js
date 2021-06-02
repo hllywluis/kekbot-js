@@ -10,7 +10,8 @@ module.exports = {
     guildOnly: false,
     async execute(message) {
         try {
-            let result = await wiki.page(message.content.substr(3).trim())
+            let search = await wiki.search(message.content.substr(3).trim().replace(/\s/g, '_'))
+            let result = await wiki.page(search.results[0].title)
             let summary = await result.summary()
 
             let wikipediaEmbed = new d.MessageEmbed()
