@@ -32,7 +32,7 @@ module.exports = {
                         .setURL(encodeURI('https://www.urbandictionary.com/define.php?term=' + word))
                         .setAuthor('Urban Dictionary', 'https://apprecs.org/ios/images/app-icons/256/74/584986228.jpg', 'https://www.urbandictionary.com')
                         .addField('Definition by ' + def[0].author.replace(/\[/g, '').replace(/]/g, '') + ':', def[0].definition.length >= 1024 ? def[0].definition.replace(/\[/g, '').replace(/]/g, '').substr(0, 1021) + '...' : def[0].definition.replace(/\[/g, '').replace(/]/g, ''))
-                        .addField('Example:', def[0].example.length >= 1024 ? def[0].example.replace(/\[/g, '').replace(/]/g, '').substr(0, 1021) + '...' : def[0].example.replace(/\[/g, '').replace(/]/g, ''))
+                        .addField('Example:', def[0].example.length >= 1024 ? def[0].example.replace(/\[/g, '').replace(/]/g, '').substr(0, 1021) + '...' : def[0].example ? def[0].example.replace(/\[/g, '').replace(/]/g, '') : 'No example provided.')
                         .addField('Thumbs Up:', def[0].thumbs_up, true)
                         .addField('Thumbs Down:', def[0].thumbs_down, true)
 
