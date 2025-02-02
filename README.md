@@ -17,6 +17,7 @@ under certain conditions described in the license.
 - Modern Discord.js v14 implementation
 - Slash commands for better user experience
 - Essential moderation commands (kick, prune)
+- AI-powered question answering with optional web search capability
 - Help command for easy reference
 
 ## Commands
@@ -25,6 +26,7 @@ under certain conditions described in the license.
 - `/ping` - Check if the bot is responsive
 - `/kick` - Kick a user from the server (requires Kick Members permission)
 - `/prune` - Delete up to 99 messages (requires Manage Messages permission)
+- `/ask` - Ask a question to the AI (supports optional web search for up-to-date information)
 
 ## Setup
 
@@ -33,6 +35,7 @@ under certain conditions described in the license.
 ```
 DISCORD_TOKEN=your_token_here
 CLIENT_ID=your_client_id_here
+OPENROUTER_API_KEY=your_openrouter_api_key_here
 ```
 
 2. Install dependencies:
