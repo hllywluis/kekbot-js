@@ -21,16 +21,13 @@ module.exports = {
     .setName('ask')
     .setDescription('Ask a question to the AI')
     .addStringOption(option =>
-      option
-        .setName('prompt')
-        .setDescription('Your question or prompt')
-        .setRequired(true)
+      option.setName('prompt').setDescription('Your question or prompt').setRequired(true),
     )
     .addBooleanOption(option =>
       option
         .setName('websearch')
         .setDescription('Enable web search for more up-to-date information')
-        .setRequired(false)
+        .setRequired(false),
     )
     // Only show the websearch option if overrides are allowed
     .setDMPermission(false),
@@ -84,13 +81,11 @@ module.exports = {
             'HTTP-Referer': 'https://github.com/hllywluis/kekbot.js',
             'Content-Type': 'application/json',
           },
-        }
+        },
       );
 
       const aiResponse = response.data.choices[0].message.content;
-      const webSearchStatus = webSearchEnabled
-        ? '\n> *Web search enabled* 🔍\n'
-        : '';
+      const webSearchStatus = webSearchEnabled ? '\n> *Web search enabled* 🔍\n' : '';
       const formattedResponse = `> **Question:** ${prompt}${webSearchStatus}\n${aiResponse}`;
 
       if (formattedResponse.length <= 2000) {
@@ -112,10 +107,7 @@ module.exports = {
 
           // If we're in the middle of a code block, find a safe split point
           const lastCodeBlock = chunk.lastIndexOf('```');
-          if (
-            lastCodeBlock !== -1 &&
-            !chunk.slice(lastCodeBlock).includes('\n```')
-          ) {
+          if (lastCodeBlock !== -1 && !chunk.slice(lastCodeBlock).includes('\n```')) {
             // Find the last newline before maxLength
             const lastNewline = chunk.lastIndexOf('\n');
             if (lastNewline !== -1) {
