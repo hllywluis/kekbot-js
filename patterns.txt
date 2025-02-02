@@ -1,0 +1,22 @@
+# Discord tokens (common patterns)
+['"](N[a-zA-Z0-9]{23}\.[a-zA-Z0-9]{6}\.[a-zA-Z0-9_-]{27})['"]
+
+# OpenRouter API keys
+['"](sk-or-[a-zA-Z0-9-]{32,64})['"]
+
+# Generic API keys and tokens
+['"]([a-zA-Z0-9_-]{32,64})['"]
+['"](api[_-]?key|api[_-]?secret|access[_-]?token|auth[_-]?token|client[_-]?secret)['"]\s*[:=]\s*['"][^'"]+['"]
+
+# Environment variables with values
+^[^#].*=(["'])[^'"]+\1
+
+# URLs with embedded credentials
+[a-zA-Z]{3,10}://[^/\s:@]+:[^/\s:@]+@[^/\s]+
+
+# Private keys and certificates
+-----BEGIN.*PRIVATE KEY-----[a-zA-Z0-9\s+/=\n]+-----END.*PRIVATE KEY-----
+-----BEGIN.*CERTIFICATE-----[a-zA-Z0-9\s+/=\n]+-----END.*CERTIFICATE-----
+
+# Common credential variable names with values
+(password|secret|token|key|pwd|apikey|api_key|auth)[\s]*[=:]\s*['"][^'"]*['"]
