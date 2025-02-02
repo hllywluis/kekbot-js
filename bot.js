@@ -1,104 +1,68 @@
-const fs = require('fs');
-const Discord = require('discord.js');
-const {prefix, token} = require('./config.json');
-const client = new Discord.Client();
-const cleverbot = require('cleverbot-free')
-client.commands = new Discord.Collection();
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
-const cooldowns = new Discord.Collection();
+// bot.js - Discord bot for moderation and utilities
+// Copyright (C) 2025  Luis Bauza
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 
-module.exports = {
-    client: client
-}
+require('dotenv').config();
+const fs = require('node:fs');
+const path = require('node:path');
+const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
+
+const client = new Client({
+    intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent,
+    ]
+});
+
+client.commands = new Collection();
+const commandsPath = path.join(__dirname, 'commands');
+const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {
-    const command = require(`./commands/${file}`);
-    client.commands.set(command.name, command);
+    const filePath = path.join(commandsPath, file);
+    const command = require(filePath);
+    if ('data' in command && 'execute' in command) {
+        client.commands.set(command.data.name, command);
+    } else {
+        console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
+    }
 }
 
-client.on('ready', () => {
-    console.log("Connected as " + client.user.tag);
+client.once(Events.ClientReady, () => {
+    console.log(`Ready! Logged in as ${client.user.tag}`);
 });
 
-client.on('message', message => {
-    let chat = []
-    if ((!message.content.startsWith(prefix) && message.channel.type === 'dm' && message.author.id !== client.user.id) || (!message.content.startsWith(prefix) && !message.mentions.has(message.mentions.EVERYONE_PATTERN) && message.mentions.has(client.user.id))) {
-        message.channel.startTyping()
-        let mention = /<@(.*?)>/
+client.on(Events.InteractionCreate, async interaction => {
+    if (!interaction.isChatInputCommand()) return;
 
-        if (chat.length > 5000) { chat = [] }
-        chat.push(message.content.replace(mention, '').trim())
-        cleverbot(message.content.replace(mention, '').trim(), chat).then(response => {
-            const cleverbotEmbed = new Discord.MessageEmbed()
-                .setColor('#cde9fa')
-                .setAuthor('Cleverbot', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkVvqrpdE1ZWcLuucR507PvHXFQloeWO5mMR_2ZDGtj-j_aw8a2A6b4swH0c62E5lUSBA&usqp=CAU', 'https://cleverbot.com')
+    const command = client.commands.get(interaction.commandName);
 
-            cleverbotEmbed.addField(message.guild && message.guild.member(client.user).displayName ? message.guild.member(client.user).displayName + ':' : client.user.username + ':', response)
-
-            chat.push(response)
-            // message.channel.send(response)
-            message.channel.send(cleverbotEmbed)
-        })
-
-        message.channel.stopTyping()
+    if (!command) {
+        console.error(`No command matching ${interaction.commandName} was found.`);
+        return;
     }
-
-    if (!message.content.startsWith(prefix) || message.author.bot) { return; }
-
-    const arguments = message.content.slice(prefix.length).split(/ +/);
-    const commandName = arguments.shift().toLowerCase();
-
-    const command = client.commands.get(commandName)
-        || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
-
-    if (!command) { return; }
-
-    if (message.channel.type === 'dm' && command.guildOnly && message.channel.type !== 'text') {
-        message.channel.stopTyping()
-        return message.reply('I can\'t execute that command inside DMs!');
-    }
-
-    // Checking and verifying arguments.
-    if (command.arguments && !arguments.length) {
-        let reply = `You didn't provide any arguments, ${message.author}!`;
-
-        if (command.usage) {
-            reply += `\nThe proper usage would be: \`${command.usage}\`.`;
-        }
-
-        message.channel.stopTyping()
-        return message.channel.send(reply);
-    }
-
-    if (!cooldowns.has(command.name)) {
-        cooldowns.set(command.name, new Discord.Collection());
-    }
-
-    const now = Date.now();
-    const timestamps = cooldowns.get(command.name);
-    const cooldownAmount = (command.cooldown || 3) * 1000;
-
-    if (timestamps.has(message.author.id)) {
-        const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
-
-        if (now < expirationTime) {
-            const timeLeft = (expirationTime - now) / 1000;
-            message.channel.stopTyping()
-            return message.reply(`please wait ${timeLeft.toFixed(1)} more second(s) before reusing the \`${command.name}\` command.`)
-        }
-    }
-
-    timestamps.set(message.author.id, now);
-    setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
 
     try {
-        command.execute(message, arguments);
-        message.channel.stopTyping()
+        await command.execute(interaction);
     } catch (error) {
         console.error(error);
-        message.channel.stopTyping()
-        message.reply(`there was an error trying to execute ${commandName}.`);
+        if (interaction.replied || interaction.deferred) {
+            await interaction.followUp({
+                content: 'There was an error while executing this command!',
+                ephemeral: true
+            });
+        } else {
+            await interaction.reply({
+                content: 'There was an error while executing this command!',
+                ephemeral: true
+            });
+        }
     }
 });
 
-client.login(token);
+client.login(process.env.DISCORD_TOKEN);

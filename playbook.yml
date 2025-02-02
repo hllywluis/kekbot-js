@@ -1,0 +1,96 @@
+---
+- name: Deploy Discord Bot
+  hosts: discord_bot
+  become: yes  # This enables sudo privileges
+  vars:
+    app_dir: /opt/kekbot
+    node_version: "20.x"  # Latest LTS version
+
+  tasks:
+    - name: Install Node.js repository
+      shell: |
+        curl -fsSL https://deb.nodesource.com/setup_{{ node_version }} | bash -
+
+    - name: Install Node.js, npm, and git
+      apt:
+        name: 
+          - nodejs
+          - npm
+          - git
+        state: present
+        update_cache: yes
+
+    - name: Create application directory
+      file:
+        path: "{{ app_dir }}"
+        state: directory
+        mode: '0755'
+
+    - name: Copy application files
+      copy:
+        src: "{{ item }}"
+        dest: "{{ app_dir }}/"
+        mode: '0644'
+      with_items:
+        - package.json
+        - package-lock.json
+        - bot.js
+        - deploy-commands.js
+        - .env
+        - .prettierrc
+
+    - name: Copy commands directory
+      copy:
+        src: commands/
+        dest: "{{ app_dir }}/commands/"
+        mode: '0644'
+
+    - name: Install npm dependencies
+      npm:
+        path: "{{ app_dir }}"
+        state: present
+        production: yes
+
+    - name: Deploy commands
+      command: npm run deploy
+      args:
+        chdir: "{{ app_dir }}"
+
+    - name: Create systemd service file
+      copy:
+        dest: /etc/systemd/system/kekbot.service
+        content: |
+          [Unit]
+          Description=Kek Discord Bot
+          After=network.target
+
+          [Service]
+          Type=simple
+          User=root
+          WorkingDirectory={{ app_dir }}
+          ExecStart=/usr/bin/npm start
+          Restart=always
+          RestartSec=10
+          StandardOutput=syslog
+          StandardError=syslog
+          SyslogIdentifier=kekbot
+
+          [Install]
+          WantedBy=multi-user.target
+        mode: '0644'
+
+    - name: Reload systemd
+      systemd:
+        daemon_reload: yes
+
+    - name: Stop existing bot service if running
+      systemd:
+        name: kekbot
+        state: stopped
+      ignore_errors: yes
+
+    - name: Enable and start bot service
+      systemd:
+        name: kekbot
+        state: started
+        enabled: yes
