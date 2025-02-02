@@ -37,8 +37,7 @@ jest.mock('discord.js', () => ({
                 },
                 {
                   name: 'websearch',
-                  description:
-                    'Enable web search for more up-to-date information',
+                  description: 'Enable web search for more up-to-date information',
                   type: 5,
                   required: false,
                 },
@@ -77,9 +76,7 @@ describe('Ask Command', () => {
       expect(promptOption.required).toBe(true);
 
       expect(websearchOption.name).toBe('websearch');
-      expect(websearchOption.description).toBe(
-        'Enable web search for more up-to-date information'
-      );
+      expect(websearchOption.description).toBe('Enable web search for more up-to-date information');
       expect(websearchOption.required).toBe(false);
     });
   });
@@ -126,7 +123,7 @@ describe('Ask Command', () => {
           model: 'google/gemini-2.0-flash-exp:free',
           plugins: undefined,
         }),
-        expect.any(Object)
+        expect.any(Object),
       );
 
       expect(interaction.followUp).toHaveBeenCalledWith({
@@ -162,7 +159,7 @@ describe('Ask Command', () => {
             }),
           ]),
         }),
-        expect.any(Object)
+        expect.any(Object),
       );
 
       expect(interaction.followUp).toHaveBeenCalledWith({
@@ -191,7 +188,7 @@ describe('Ask Command', () => {
           model: 'google/gemini-2.0-flash-exp:free',
           plugins: undefined,
         }),
-        expect.any(Object)
+        expect.any(Object),
       );
     });
 
@@ -222,12 +219,8 @@ describe('Ask Command', () => {
       await askCommand.execute(interaction);
 
       expect(interaction.followUp).toHaveBeenCalledTimes(2);
-      expect(interaction.followUp.mock.calls[0][0].content).toContain(
-        'Web search enabled'
-      );
-      expect(interaction.followUp.mock.calls[1][0].content).toContain(
-        '(continued)'
-      );
+      expect(interaction.followUp.mock.calls[0][0].content).toContain('Web search enabled');
+      expect(interaction.followUp.mock.calls[1][0].content).toContain('(continued)');
     });
 
     it('should handle code blocks in chunked responses with websearch', async () => {
@@ -241,8 +234,9 @@ describe('Ask Command', () => {
         },
       });
 
-      const responseWithCodeBlock =
-        "Here's a code example:\n```python\nprint('hello')\n```".repeat(20);
+      const responseWithCodeBlock = "Here's a code example:\n```python\nprint('hello')\n```".repeat(
+        20,
+      );
       axios.post.mockResolvedValueOnce({
         data: {
           choices: [
@@ -265,20 +259,14 @@ describe('Ask Command', () => {
       });
 
       // First chunk should contain websearch indicator
-      expect(interaction.followUp.mock.calls[0][0].content).toContain(
-        'Web search enabled'
-      );
+      expect(interaction.followUp.mock.calls[0][0].content).toContain('Web search enabled');
     });
 
     it('should handle API errors with websearch enabled', async () => {
       interaction = createMockInteraction({
         commandName: 'ask',
-        stringOptions: {
-          prompt: mockPrompt,
-        },
-        booleanOptions: {
-          websearch: true,
-        },
+        stringOptions: { prompt: mockPrompt },
+        booleanOptions: { websearch: true },
       });
 
       const error = new Error('API Error');
@@ -289,6 +277,60 @@ describe('Ask Command', () => {
 
       expect(interaction.followUp).toHaveBeenCalledWith({
         content: 'Sorry, there was an error processing your request.',
+        ephemeral: true,
+      });
+    });
+
+    it('should handle rate limit errors', async () => {
+      interaction = createMockInteraction({
+        commandName: 'ask',
+        stringOptions: { prompt: mockPrompt },
+      });
+
+      const error = new Error('Rate Limit Exceeded');
+      error.response = { status: 429, data: 'Too Many Requests' };
+      axios.post.mockRejectedValueOnce(error);
+
+      await askCommand.execute(interaction);
+
+      expect(interaction.followUp).toHaveBeenCalledWith({
+        content: 'The AI service is currently busy. Please try again in a few moments.',
+        ephemeral: true,
+      });
+    });
+
+    it('should handle timeout errors', async () => {
+      interaction = createMockInteraction({
+        commandName: 'ask',
+        stringOptions: { prompt: mockPrompt },
+      });
+
+      const error = new Error('Timeout');
+      error.code = 'ETIMEDOUT';
+      axios.post.mockRejectedValueOnce(error);
+
+      await askCommand.execute(interaction);
+
+      expect(interaction.followUp).toHaveBeenCalledWith({
+        content: 'The request timed out. Please try again.',
+        ephemeral: true,
+      });
+    });
+
+    it('should handle invalid request errors', async () => {
+      interaction = createMockInteraction({
+        commandName: 'ask',
+        stringOptions: { prompt: mockPrompt },
+      });
+
+      const error = new Error('Bad Request');
+      error.response = { status: 400, data: 'Invalid Request' };
+      axios.post.mockRejectedValueOnce(error);
+
+      await askCommand.execute(interaction);
+
+      expect(interaction.followUp).toHaveBeenCalledWith({
+        content: 'Invalid request. Please try rephrasing your question.',
         ephemeral: true,
       });
     });
@@ -308,17 +350,13 @@ describe('Ask Command', () => {
 
       await askCommand.execute(interaction);
 
-      expect(axios.post).toHaveBeenCalledWith(
-        expect.any(String),
-        expect.any(Object),
-        {
-          headers: {
-            Authorization: 'Bearer test-api-key',
-            'HTTP-Referer': 'https://github.com/hllywluis/kekbot.js',
-            'Content-Type': 'application/json',
-          },
-        }
-      );
+      expect(axios.post).toHaveBeenCalledWith(expect.any(String), expect.any(Object), {
+        headers: {
+          Authorization: 'Bearer test-api-key',
+          'HTTP-Referer': 'https://github.com/hllywluis/kekbot.js',
+          'Content-Type': 'application/json',
+        },
+      });
     });
 
     it('should handle defer reply failure with websearch', async () => {
@@ -333,9 +371,7 @@ describe('Ask Command', () => {
         deferFails: true,
       });
 
-      await expect(askCommand.execute(interaction)).rejects.toThrow(
-        'Failed to defer reply'
-      );
+      await expect(askCommand.execute(interaction)).rejects.toThrow('Failed to defer reply');
     });
 
     it('should handle follow up failure with websearch', async () => {
@@ -352,9 +388,7 @@ describe('Ask Command', () => {
 
       axios.post.mockResolvedValueOnce(mockApiResponse);
 
-      await expect(askCommand.execute(interaction)).rejects.toThrow(
-        'Failed to follow up'
-      );
+      await expect(askCommand.execute(interaction)).rejects.toThrow('Failed to follow up');
     });
   });
 });

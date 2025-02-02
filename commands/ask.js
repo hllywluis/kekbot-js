@@ -130,13 +130,56 @@ module.exports = {
           isFirstChunk = false;
         }
 
-        // Send all chunks in sequence
-        await Promise.all(chunks.map(chunk => interaction.followUp(chunk)));
+        // Send chunks sequentially using reduce
+        await chunks.reduce(
+          (promise, chunk) =>
+            promise.then(async () => {
+              try {
+                await interaction.followUp(chunk);
+                return undefined;
+              } catch (error) {
+                console.error('Error sending message chunk:', {
+                  chunkLength: chunk.content.length,
+                  error: error.message,
+                });
+                // Attempt to send error notification
+                try {
+                  await interaction.followUp({
+                    content: 'Failed to send complete response. Please try again.',
+                    ephemeral: true,
+                  });
+                } catch (e) {
+                  // If even the error notification fails, log it
+                  console.error('Failed to send error notification:', e.message);
+                }
+                // Reject to stop processing remaining chunks
+                return Promise.reject(error);
+              }
+            }),
+          Promise.resolve(),
+        );
       }
     } catch (error) {
-      console.error('Error:', error.response?.data || error.message);
+      // Log detailed error information
+      console.error('Error in ask command:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status,
+        stack: error.stack,
+      });
+
+      // Provide more specific error messages to users
+      let errorMessage = 'Sorry, there was an error processing your request.';
+      if (error.response?.status === 429) {
+        errorMessage = 'The AI service is currently busy. Please try again in a few moments.';
+      } else if (error.code === 'ECONNABORTED' || error.code === 'ETIMEDOUT') {
+        errorMessage = 'The request timed out. Please try again.';
+      } else if (error.response?.status === 400) {
+        errorMessage = 'Invalid request. Please try rephrasing your question.';
+      }
+
       await interaction.followUp({
-        content: 'Sorry, there was an error processing your request.',
+        content: errorMessage,
         ephemeral: true,
       });
     }
