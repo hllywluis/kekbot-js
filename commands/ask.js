@@ -28,9 +28,7 @@ module.exports = {
         .setName('websearch')
         .setDescription('Enable web search for more up-to-date information')
         .setRequired(false),
-    )
-    // Only show the websearch option if overrides are allowed
-    .setDMPermission(false),
+    ),
 
   async execute(interaction) {
     await interaction.deferReply();
@@ -49,8 +47,8 @@ module.exports = {
         'https://openrouter.ai/api/v1/chat/completions',
         {
           model: webSearchEnabled
-            ? 'google/gemini-2.0-flash-exp:free:online'
-            : 'google/gemini-2.0-flash-exp:free',
+            ? 'google/gemini-2.0-flash-001:online'
+            : 'google/gemini-2.0-flash-001',
           messages: [
             {
               role: 'system',

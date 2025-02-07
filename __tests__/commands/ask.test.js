@@ -120,7 +120,7 @@ describe('Ask Command', () => {
       expect(axios.post).toHaveBeenCalledWith(
         'https://openrouter.ai/api/v1/chat/completions',
         expect.objectContaining({
-          model: 'google/gemini-2.0-flash-exp:free',
+          model: 'google/gemini-2.0-flash-001',
           plugins: undefined,
         }),
         expect.any(Object),
@@ -151,7 +151,7 @@ describe('Ask Command', () => {
       expect(axios.post).toHaveBeenCalledWith(
         'https://openrouter.ai/api/v1/chat/completions',
         expect.objectContaining({
-          model: 'google/gemini-2.0-flash-exp:free:online',
+          model: 'google/gemini-2.0-flash-001:online',
           plugins: expect.arrayContaining([
             expect.objectContaining({
               id: 'web',
@@ -185,7 +185,7 @@ describe('Ask Command', () => {
       expect(axios.post).toHaveBeenCalledWith(
         'https://openrouter.ai/api/v1/chat/completions',
         expect.objectContaining({
-          model: 'google/gemini-2.0-flash-exp:free',
+          model: 'google/gemini-2.0-flash-001',
           plugins: undefined,
         }),
         expect.any(Object),
