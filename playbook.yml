@@ -36,6 +36,7 @@
         - package-lock.json
         - bot.js
         - deploy-commands.js
+        - logger.js
         - .env
         - .prettierrc
 
