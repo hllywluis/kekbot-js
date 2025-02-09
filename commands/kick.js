@@ -6,26 +6,23 @@
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
-const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
+import { SlashCommandBuilder, PermissionFlagsBits } from 'discord.js';
 
-module.exports = {
+// eslint-disable-next-line import/extensions
+import logger from '../logger.js';
+
+export default {
   data: new SlashCommandBuilder()
     .setName('kick')
     .setDescription('Kick a user from the server')
     .addUserOption(option =>
-      option
-        .setName('target')
-        .setDescription('The user to kick')
-        .setRequired(true),
+      option.setName('target').setDescription('The user to kick').setRequired(true),
     )
-    .addStringOption(option =>
-      option.setName('reason').setDescription('Reason for kicking'),
-    )
+    .addStringOption(option => option.setName('reason').setDescription('Reason for kicking'))
     .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers),
   async execute(interaction) {
     const target = interaction.options.getMember('target');
-    const reason =
-      interaction.options.getString('reason') ?? 'No reason provided';
+    const reason = interaction.options.getString('reason') ?? 'No reason provided';
 
     if (!target) {
       return interaction.reply({
@@ -36,21 +33,20 @@ module.exports = {
 
     if (!target.kickable) {
       return interaction.reply({
-        content:
-          'I cannot kick this user! They may have higher permissions than me.',
+        content: 'I cannot kick this user! They may have higher permissions than me.',
         ephemeral: true,
       });
     }
 
     try {
       await target.kick(reason);
-      await interaction.reply({
+      return await interaction.reply({
         content: `Successfully kicked ${target.user.tag}\nReason: ${reason}`,
         ephemeral: true,
       });
     } catch (error) {
-      console.error(error);
-      await interaction.reply({
+      logger.error(error);
+      return interaction.reply({
         content: 'There was an error trying to kick this user!',
         ephemeral: true,
       });

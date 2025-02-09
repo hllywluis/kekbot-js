@@ -6,8 +6,8 @@
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
-const { SlashCommandBuilder } = require('discord.js');
-const axios = require('axios');
+import { SlashCommandBuilder } from 'discord.js';
+import axios from 'axios';
 
 const config = {
   webSearch: {
@@ -16,7 +16,7 @@ const config = {
   },
 };
 
-module.exports = {
+export default {
   data: new SlashCommandBuilder()
     .setName('ask')
     .setDescription('Ask a question to the AI')

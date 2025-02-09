@@ -6,12 +6,10 @@
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 
-module.exports = {
-  data: new SlashCommandBuilder()
-    .setName('help')
-    .setDescription('Lists all available commands'),
+export default {
+  data: new SlashCommandBuilder().setName('help').setDescription('Lists all available commands'),
   async execute(interaction) {
     const { commands } = interaction.client;
     const helpEmbed = new EmbedBuilder()

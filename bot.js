@@ -10,6 +10,9 @@ require('dotenv').config();
 const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
+const Logger = require('./logger');
+
+const logger = new Logger('bot');
 
 const client = new Client({
   intents: [
@@ -23,16 +26,14 @@ client.commands = new Collection();
 const commandsPath = path.join(__dirname, 'commands');
 const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 
-const logger = message => process.stdout.write(`${message}\n`);
-
 await Promise.all(
   commandFiles.map(async file => {
     const filePath = path.join(commandsPath, file);
-    const command = await import(`file://${filePath}`);
+    const command = await import(filePath);
     if ('data' in command && 'execute' in command) {
       client.commands.set(command.data.name, command);
     } else {
-      logger(
+      logger.warn(
         `[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`,
       );
     }
@@ -40,7 +41,7 @@ await Promise.all(
 );
 
 client.once(Events.ClientReady, () => {
-  console.log(`Ready! Logged in as ${client.user.tag}`);
+  logger.log(`Ready! Logged in as ${client.user.tag}`);
 });
 
 client.on(Events.InteractionCreate, async interaction => {
@@ -49,14 +50,14 @@ client.on(Events.InteractionCreate, async interaction => {
   const command = client.commands.get(interaction.commandName);
 
   if (!command) {
-    console.error(`No command matching ${interaction.commandName} was found.`);
+    logger.error(`No command matching ${interaction.commandName} was found.`);
     return;
   }
 
   try {
     await command.execute(interaction);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     if (interaction.replied || interaction.deferred) {
       await interaction.followUp({
         content: 'There was an error while executing this command!',

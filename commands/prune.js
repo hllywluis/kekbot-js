@@ -6,9 +6,9 @@
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
-const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
+import { SlashCommandBuilder, PermissionFlagsBits } from 'discord.js';
 
-module.exports = {
+export default {
   data: new SlashCommandBuilder()
     .setName('prune')
     .setDescription('Prune up to 99 messages.')

@@ -6,12 +6,10 @@
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
-const { SlashCommandBuilder } = require('discord.js');
+import { SlashCommandBuilder } from 'discord.js';
 
-module.exports = {
-  data: new SlashCommandBuilder()
-    .setName('ping')
-    .setDescription('Replies with Pong!'),
+export default {
+  data: new SlashCommandBuilder().setName('ping').setDescription('Replies with Pong!'),
   async execute(interaction) {
     await interaction.reply('Pong! 🏓');
   },
