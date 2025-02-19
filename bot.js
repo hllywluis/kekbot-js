@@ -6,11 +6,17 @@
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
-require('dotenv').config();
-const fs = require('node:fs');
-const path = require('node:path');
-const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
-const Logger = require('./logger');
+import 'dotenv/config';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
+import { Client, Collection, Events, GatewayIntentBits } from 'discord.js';
+import Logger from './logger.js';
+import { loadCommands } from './utils/commandLoader.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const logger = new Logger('bot');
 
@@ -24,21 +30,11 @@ const client = new Client({
 
 client.commands = new Collection();
 const commandsPath = path.join(__dirname, 'commands');
-const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 
-await Promise.all(
-  commandFiles.map(async file => {
-    const filePath = path.join(commandsPath, file);
-    const command = await import(filePath);
-    if ('data' in command && 'execute' in command) {
-      client.commands.set(command.data.name, command);
-    } else {
-      logger.warn(
-        `[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`,
-      );
-    }
-  }),
-);
+const commands = await loadCommands(commandsPath, logger);
+commands.forEach(command => {
+  client.commands.set(command.data.name, command);
+});
 
 client.once(Events.ClientReady, () => {
   logger.log(`Ready! Logged in as ${client.user.tag}`);

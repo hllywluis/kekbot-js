@@ -46,6 +46,12 @@
         dest: "{{ app_dir }}/commands/"
         mode: '0644'
 
+    - name: Copy utils directory
+      copy:
+        src: utils/
+        dest: "{{ app_dir }}/utils/"
+        mode: '0644'
+
     - name: Install npm dependencies
       npm:
         path: "{{ app_dir }}"

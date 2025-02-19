@@ -8,39 +8,29 @@
 
 import dotenv from 'dotenv';
 import { REST, Routes } from 'discord.js';
-import { readdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 // eslint-disable-next-line import/extensions
 import Logger from './logger.js';
+import { loadCommands } from './utils/commandLoader.js';
 
 dotenv.config();
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const logger = new Logger('deploy-commands');
 
-const commands = [];
 const commandsPath = join(__dirname, 'commands');
-const commandFiles = readdirSync(commandsPath).filter(file => file.endsWith('.js'));
-
-await Promise.all(
-  commandFiles.map(async file => {
-    const filePath = join(commandsPath, file);
-    const command = await import(filePath);
-    if ('data' in command && 'execute' in command) {
-      commands.push(command.data.toJSON());
-    }
-  }),
-);
+const commands = await loadCommands(commandsPath, logger);
+const commandData = commands.map(command => command.data.toJSON());
 
 const rest = new REST().setToken(process.env.DISCORD_TOKEN);
 
 (async () => {
   try {
-    logger.log(`Started refreshing ${commands.length} application (/) commands.`);
+    logger.log(`Started refreshing ${commandData.length} application (/) commands.`);
 
     const data = await rest.put(Routes.applicationCommands(process.env.CLIENT_ID), {
-      body: commands,
+      body: commandData,
     });
 
     logger.log(`Successfully reloaded ${data.length} application (/) commands.`);
