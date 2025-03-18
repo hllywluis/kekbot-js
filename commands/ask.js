@@ -47,8 +47,8 @@ export default {
         'https://openrouter.ai/api/v1/chat/completions',
         {
           model: webSearchEnabled
-            ? 'google/gemini-2.0-flash-001:online'
-            : 'google/gemini-2.0-flash-001',
+            ? 'google/gemma-3-27b-it:free:online'
+            : 'google/gemma-3-27b-it:free',
           messages: [
             {
               role: 'system',
