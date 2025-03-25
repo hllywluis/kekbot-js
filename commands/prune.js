@@ -7,35 +7,30 @@
 // (at your option) any later version.
 
 import { SlashCommandBuilder, PermissionFlagsBits } from 'discord.js';
+import Command from '../utils/Command.js';
 
-export default {
-  data: new SlashCommandBuilder()
-    .setName('prune')
-    .setDescription('Prune up to 99 messages.')
-    .addIntegerOption(option =>
-      option
-        .setName('amount')
-        .setDescription('Number of messages to prune')
-        .setMinValue(1)
-        .setMaxValue(99)
-        .setRequired(true),
-    )
-    .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
-  async execute(interaction) {
+export default class PruneCommand extends Command {
+  defineCommand() {
+    return new SlashCommandBuilder()
+      .setName('prune')
+      .setDescription('Prune up to 99 messages.')
+      .addIntegerOption(option =>
+        option
+          .setName('amount')
+          .setDescription('Number of messages to prune')
+          .setMinValue(1)
+          .setMaxValue(99)
+          .setRequired(true),
+      )
+      .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages);
+  }
+
+  async run(interaction) {
     const amount = interaction.options.getInteger('amount');
-
-    try {
-      const deleted = await interaction.channel.bulkDelete(amount, true);
-      await interaction.reply({
-        content: `Successfully deleted ${deleted.size} message(s).`,
-        ephemeral: true,
-      });
-    } catch (error) {
-      console.error(error);
-      await interaction.reply({
-        content: 'There was an error trying to prune messages in this channel!',
-        ephemeral: true,
-      });
-    }
-  },
-};
+    const deleted = await interaction.channel.bulkDelete(amount, true);
+    await interaction.reply({
+      content: `Successfully deleted ${deleted.size} message(s).`,
+      ephemeral: true,
+    });
+  }
+}

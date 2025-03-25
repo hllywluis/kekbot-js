@@ -7,49 +7,36 @@
 // (at your option) any later version.
 
 import { SlashCommandBuilder, PermissionFlagsBits } from 'discord.js';
+import Command from '../utils/Command.js';
 
-// eslint-disable-next-line import/extensions
-import logger from '../logger.js';
+export default class KickCommand extends Command {
+  defineCommand() {
+    return new SlashCommandBuilder()
+      .setName('kick')
+      .setDescription('Kick a user from the server')
+      .addUserOption(option =>
+        option.setName('target').setDescription('The user to kick').setRequired(true),
+      )
+      .addStringOption(option => option.setName('reason').setDescription('Reason for kicking'))
+      .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers);
+  }
 
-export default {
-  data: new SlashCommandBuilder()
-    .setName('kick')
-    .setDescription('Kick a user from the server')
-    .addUserOption(option =>
-      option.setName('target').setDescription('The user to kick').setRequired(true),
-    )
-    .addStringOption(option => option.setName('reason').setDescription('Reason for kicking'))
-    .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers),
-  async execute(interaction) {
+  async run(interaction) {
     const target = interaction.options.getMember('target');
     const reason = interaction.options.getString('reason') ?? 'No reason provided';
 
     if (!target) {
-      return interaction.reply({
-        content: 'That user is not in this server!',
-        ephemeral: true,
-      });
+      throw new Error('That user is not in this server!');
     }
 
     if (!target.kickable) {
-      return interaction.reply({
-        content: 'I cannot kick this user! They may have higher permissions than me.',
-        ephemeral: true,
-      });
+      throw new Error('I cannot kick this user! They may have higher permissions than me.');
     }
 
-    try {
-      await target.kick(reason);
-      return await interaction.reply({
-        content: `Successfully kicked ${target.user.tag}\nReason: ${reason}`,
-        ephemeral: true,
-      });
-    } catch (error) {
-      logger.error(error);
-      return interaction.reply({
-        content: 'There was an error trying to kick this user!',
-        ephemeral: true,
-      });
-    }
-  },
-};
+    await target.kick(reason);
+    await interaction.reply({
+      content: `Successfully kicked ${target.user.tag}\nReason: ${reason}`,
+      ephemeral: true,
+    });
+  }
+}

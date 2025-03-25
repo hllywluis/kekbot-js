@@ -7,10 +7,14 @@
 // (at your option) any later version.
 
 import { SlashCommandBuilder } from 'discord.js';
+import Command from '../utils/Command.js';
 
-export default {
-  data: new SlashCommandBuilder().setName('ping').setDescription('Replies with Pong!'),
-  async execute(interaction) {
+export default class PingCommand extends Command {
+  defineCommand() {
+    return new SlashCommandBuilder().setName('ping').setDescription('Replies with Pong!');
+  }
+
+  async run(interaction) {
     await interaction.reply('Pong! 🏓');
-  },
-};
+  }
+}

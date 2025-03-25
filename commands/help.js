@@ -7,10 +7,14 @@
 // (at your option) any later version.
 
 import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+import Command from '../utils/Command.js';
 
-export default {
-  data: new SlashCommandBuilder().setName('help').setDescription('Lists all available commands'),
-  async execute(interaction) {
+export default class HelpCommand extends Command {
+  defineCommand() {
+    return new SlashCommandBuilder().setName('help').setDescription('Lists all available commands');
+  }
+
+  async run(interaction) {
     const { commands } = interaction.client;
     const helpEmbed = new EmbedBuilder()
       .setColor('#5dc67b')
@@ -26,5 +30,5 @@ export default {
     });
 
     await interaction.reply({ embeds: [helpEmbed], ephemeral: true });
-  },
-};
+  }
+}

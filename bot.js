@@ -53,18 +53,24 @@ client.on(Events.InteractionCreate, async interaction => {
   try {
     await command.execute(interaction);
   } catch (error) {
-    logger.error(error);
-    if (interaction.replied || interaction.deferred) {
-      await interaction.followUp({
-        content: 'There was an error while executing this command!',
-        ephemeral: true,
-      });
-    } else {
-      await interaction.reply({
-        content: 'There was an error while executing this command!',
-        ephemeral: true,
-      });
-    }
+    // Log detailed error context
+    logger.error(
+      `Command "${interaction.commandName}" failed for user ${interaction.user.tag}:`,
+      error,
+    );
+
+    // Prepare error response
+    const isProduction = process.env.NODE_ENV === 'production';
+    const errorMessage = isProduction
+      ? `❌ Command failed. Please try again later.`
+      : `❌ Command failed: ${error.message}\n\n${error.stack}`;
+
+    const responseMethod = interaction.replied || interaction.deferred ? 'followUp' : 'reply';
+
+    await interaction[responseMethod]({
+      content: errorMessage,
+      ephemeral: true,
+    });
   }
 });
 
