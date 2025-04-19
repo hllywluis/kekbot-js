@@ -7,12 +7,12 @@ module.exports = {
     es6: true,
   },
   extends: [
-    'airbnb-base',
     'eslint:recommended',
-    'prettier',
-    'plugin:prettier/recommended',
+    'airbnb-base',
     'plugin:import/errors',
     'plugin:import/warnings',
+    'plugin:prettier/recommended',
+    'prettier',
   ],
   parserOptions: {
     ecmaVersion: 2023,
@@ -30,7 +30,7 @@ module.exports = {
     'arrow-body-style': ['error', 'as-needed'],
     'import/extensions': [
       'error',
-      'always',
+      'ignorePackages',
       {
         js: 'never',
         jsx: 'never',
