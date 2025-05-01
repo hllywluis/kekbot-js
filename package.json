@@ -9,7 +9,8 @@
     "deploy": "node deploy-commands.js",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "deploy:ansible": "ansible-playbook -i inventory.ini playbook.yml"
   },
   "keywords": [],
   "author": "",

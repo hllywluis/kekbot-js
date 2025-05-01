@@ -8,7 +8,7 @@
 
 import { SlashCommandBuilder } from 'discord.js';
 import axios from 'axios';
-import Command from '../utils/Command.js';
+import Command from '../utils/command.js';
 
 const config = {
   webSearch: {

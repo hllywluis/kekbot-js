@@ -7,7 +7,7 @@
 // (at your option) any later version.
 
 import { SlashCommandBuilder } from 'discord.js';
-import Command from '../utils/Command.js';
+import Command from '../utils/command.js';
 
 export default class PingCommand extends Command {
   defineCommand() {

@@ -25,7 +25,7 @@ export async function loadCommands(commandsPath, logger) {
         const commandModule = await import(filePath);
         const Command = commandModule.default;
 
-        const CommandBase = (await import('./Command.js')).default;
+        const CommandBase = (await import('./command.js')).default;
         if (Command.prototype instanceof CommandBase) {
           // New style - class extending Command
           const commandInstance = new Command();

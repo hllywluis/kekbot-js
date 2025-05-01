@@ -1,4 +1,4 @@
-// utils/Command.js - Base command class for Discord bot commands
+// utils/command.js - Base command class for Discord bot commands
 // Copyright (C) 2025  Luis Bauza
 //
 // This program is free software: you can redistribute it and/or modify
