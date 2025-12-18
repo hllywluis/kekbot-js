@@ -48,9 +48,7 @@ export default class AskCommand extends Command {
     const response = await axios.post(
       'https://openrouter.ai/api/v1/chat/completions',
       {
-        model: webSearchEnabled
-          ? 'google/gemma-3-27b-it:free:online'
-          : 'google/gemma-3-27b-it:free',
+        model: webSearchEnabled ? 'xiaomi/mimo-v2-flash:free:online' : 'xiaomi/mimo-v2-flash:free',
         messages: [
           {
             role: 'system',
